@@ -46,7 +46,12 @@ namespace ProfileEvents
         Counters(Counter * allocated_counters)
             :  counters(allocated_counters), parent(nullptr), level(VariableContext::Global) {}
 
-        inline Counter & operator[] (Event event)
+        Counter & operator[] (Event event)
+        {
+            return counters[event];
+        }
+
+        const Counter & operator[] (Event event) const
         {
             return counters[event];
         }
@@ -81,14 +86,14 @@ namespace ProfileEvents
         /// Set all counters to zero
         void resetCounters();
 
-        /// Dumps profile events to two column Array(String) and Array(UInt64)
-        void dumpToArrayColumns(DB::IColumn * column_names, DB::IColumn * column_value, bool nonzero_only = true);
-
         static const Event num_counters;
     };
 
     /// Increment a counter for event. Thread-safe.
     void increment(Event event, Count amount = 1);
+
+    /// Dumps profile events to two column Array(String) and Array(UInt64)
+    void dumpToArrayColumns(const Counters & counters, DB::IColumn * column_names, DB::IColumn * column_value, bool nonzero_only = true);
 
     /// Get text description of event by identifier. Returns statically allocated string.
     const char * getDescription(Event event);

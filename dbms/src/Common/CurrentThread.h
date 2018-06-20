@@ -69,11 +69,7 @@ public:
     /// Initializes query with current thread as master thread in constructor, and detaches it in desstructor
     struct QueryScope
     {
-        explicit QueryScope(Context & query_context)
-        {
-            CurrentThread::initializeQuery();
-            CurrentThread::attachQueryContext(query_context);
-        }
+        explicit QueryScope(Context & query_context);
 
         ~QueryScope();
     };

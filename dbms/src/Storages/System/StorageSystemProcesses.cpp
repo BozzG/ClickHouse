@@ -128,7 +128,14 @@ BlockInputStreams StorageSystemProcesses::read(
         {
             IColumn * column_profile_events_names = res_columns[i++].get();
             IColumn * column_profile_events_values = res_columns[i++].get();
-            process.profile_counters->dumpToArrayColumns(column_profile_events_names, column_profile_events_values, true);
+
+            if (process.profile_counters)
+                dumpToArrayColumns(*process.profile_counters, column_profile_events_names, column_profile_events_values, true);
+            else
+            {
+                column_profile_events_names->insertDefault();
+                column_profile_events_values->insertDefault();
+            }
         }
 
         {
